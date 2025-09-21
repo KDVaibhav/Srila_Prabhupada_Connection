@@ -145,7 +145,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`px-2 md:px-20 pt-5 bg-bgApp ${roboto.variable} ${geistSans.variable} ${geistMono.variable} ${unna.variable}  antialiased`}
+        className={`px-2 md:px-20  bg-bgApp ${roboto.variable} ${geistSans.variable} ${geistMono.variable} ${unna.variable}  antialiased`}
       >
         <Providers>
           <Navbar />

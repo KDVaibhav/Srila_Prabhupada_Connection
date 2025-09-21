@@ -44,7 +44,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full flex gap-4 top-5 z-[100]">
+    <nav className="w-full flex gap-4 top-1 z-[100] sticky">
       {/* Main Nav */}
       <div className="relative flex flex-col bg-white backdrop-blur-md w-full shadow-md rounded-2xl">
         <div className="flex justify-between pr-2 items-center">
