@@ -7,7 +7,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuth, setWindowSize } from "@/features/authSlice";
+import { logoutUser, setAuth, setWindowSize } from "@/features/authSlice";
 import { AppDispatch } from "@/lib/store";
 
 const Navbar = () => {
@@ -70,20 +70,14 @@ const Navbar = () => {
           />
         )}
       </div>
-      {/* {isAuthenticated ? (
+      {isAuthenticated && (
         <button
           onClick={() => dispatch(logoutUser())}
           className="bg-primary2 w-24 h-14 flex items-center justify-center rounded-2xl shadow-md font-bold font-Roboto text-white mt-2 hover:text-fontApp2"
         >
           Logout
         </button>
-      ) : (
-        <LoginButton
-          openModal={openModal}
-          onCloseModal={onCloseModal}
-          setOpenModal={setOpenModal}
-        />
-      )} */}
+      )}
     </nav>
   );
 };
