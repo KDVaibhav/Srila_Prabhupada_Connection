@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Unna, Roboto } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "./Providers";
@@ -14,6 +14,17 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+const roboto = Roboto({
+  subsets: ["latin"],
+  variable: "--font-roboto",
+  weight: ["400", "500", "700"], // choose weights you need
+});
+
+const unna = Unna({
+  variable: "--font-unna",
+  subsets: ["latin"],
+  weight: ["400"], // Regular
 });
 
 export const metadata: Metadata = {
@@ -134,7 +145,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`px-2 md:px-20 pt-5 bg-bgApp ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`px-2 md:px-20 pt-5 bg-bgApp ${roboto.variable} ${geistSans.variable} ${geistMono.variable} ${unna.variable}  antialiased`}
       >
         <Providers>
           <Navbar />
