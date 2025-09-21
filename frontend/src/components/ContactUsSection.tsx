@@ -52,8 +52,8 @@ const ContactUsSection = () => {
         <div className="text-fontApp flex flex-col items-center justify-center max-w-72 md:max-w-96">
           <h1 className="font-bold">Contact Us</h1>
           <div className="text-center">
-            Srila Prabhupada Connection - Mayapur, Room 102, 1st floor, lotus
-            building, Iskcon Temple Mayapur, Nadia 741313, West Bengal, India.
+            Srila Prabhupada Connection - Mayapur, Room 102, 1st floor, Lotus
+            Building, Iskcon Temple Mayapur, Nadia 741313, West Bengal, India.
           </div>
           <div className="flex flex-col gap-2 p-2">
             <div className="flex items-center gap-2">

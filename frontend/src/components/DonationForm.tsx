@@ -1,28 +1,42 @@
+"use client";
+import { Button } from "flowbite-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
-
+import Image from "next/image";
 const DonationForm = () => {
+  const router = useRouter();
+  const handleDonateRoute = () => {
+    router.push("/donation");
+  };
   return (
-    <div className="flex flex-col md:flex-row items-center justify-center bg-bgApp2 rounded-2xl mt-2">
-      <div className="w-full md:w-1/3 flex items-center justify-center order-1 md:order-2">
-        <img
-          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/donation.png?updatedAt=1751788582838"
-          className="rounded-2xl m-2 object-fill w-1/3 md:w-2/3 h-[100px]"
-        />
-      </div>
-      <div className="flex flex-col items-center bg-bgApp2 rounded-2xl mb-2 order-2 md:order-1">
-        <div className="p-2 text-center text-fontApp">
-          Please Donate And Help Us Organize Srila Prabhupada Connect Days
+    <div className="relative w-full aspect-[3/1] rounded-2xl overflow-hidden">
+      <Image
+        src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/donateBanner.svg?updatedAt=1758437352748"
+        alt="Donate Banner"
+        fill
+        className="object-cover" // switch from object-contain to cover
+        priority
+      />
+      <div className="absolute inset-0 flex flex-col items-end justify-center">
+        <div className="flex flex-col items-center w-3/4 justify-center">
+          <div className="flex flex-col p-2 text-center text-[#FADEDE] font-donation text-xl sm:text-4xl lg:text-6xl">
+            <span>Offer Your Support and </span>
+            <span>Be Part of Srila Prabhupada </span>
+            <span>Connect Days</span>
+          </div>
+
+          <Button
+            size="lg"
+            onClick={() => handleDonateRoute()}
+            className="w-fit bg-primary2 rounded-2xl font-extrabold shadow-slate-200 shadow-2xl"
+          >
+            Donate Now
+          </Button>
         </div>
-        <Link
-          href={"/donation"}
-          className="p-2 bg-primary2 rounded-2xl font-bold text-white hover:text-fontApp2"
-        >
-          Donate Now
-        </Link>
       </div>
     </div>
-  )
+  );
 };
 
 export default DonationForm;

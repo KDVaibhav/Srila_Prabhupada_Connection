@@ -9,11 +9,9 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser, setAuth, setWindowSize } from "@/features/authSlice";
 import { AppDispatch } from "@/lib/store";
-import LoginModal from "./LoginModal";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
   const dispatch: AppDispatch = useDispatch();
   var pathname = usePathname() || "/";
   const [hoveredPath, setHoveredPath] = useState(pathname);
@@ -29,19 +27,13 @@ const Navbar = () => {
     }) => state.auth
   );
 
-  const onCloseModal = () => {
-    setOpenModal(false);
-  };
-
   if (pathname.includes("/blogs/")) pathname = "/blogs";
   if (pathname.includes("/courses/")) pathname = "/courses";
   if (pathname.includes("/events/")) pathname = "/events";
 
   useEffect(() => {
     const handleResize = () => dispatch(setWindowSize(window.innerWidth));
-    dispatch(
-      setAuth({ isAuthenticated: localStorage.getItem("token") !== null })
-    );
+
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -78,19 +70,13 @@ const Navbar = () => {
           />
         )}
       </div>
-      {isAuthenticated ? (
+      {isAuthenticated && (
         <button
           onClick={() => dispatch(logoutUser())}
           className="bg-primary2 w-24 h-14 flex items-center justify-center rounded-2xl shadow-md font-bold font-Roboto text-white mt-2 hover:text-fontApp2"
         >
           Logout
         </button>
-      ) : (
-        <LoginButton
-          openModal={openModal}
-          onCloseModal={onCloseModal}
-          setOpenModal={setOpenModal}
-        />
       )}
     </nav>
   );
@@ -204,27 +190,6 @@ const NavOptions = ({
   );
 };
 
-const LoginButton = ({
-  openModal,
-  setOpenModal,
-  onCloseModal,
-}: {
-  openModal: boolean;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  onCloseModal: () => void;
-}) => {
-  return (
-    <>
-      <button
-        onClick={() => setOpenModal(true)}
-        className="bg-primary2 w-24 h-14 flex items-center justify-center rounded-2xl shadow-md font-bold font-Roboto text-white mt-2 hover:text-fontApp2"
-      >
-        Login
-      </button>
-      <LoginModal openModal={openModal} onCloseModal={onCloseModal} />
-    </>
-  );
-};
 const MobileMenuToggle = ({
   isOpen,
   toggleNavBar,
