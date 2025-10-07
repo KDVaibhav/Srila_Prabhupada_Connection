@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "Srila Prabhupada Connection - ISKCON Mayapur",
     images: [
       {
-        url: "https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.jpg?updatedAt=1755154940572",
+        url: "https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.png?updatedAt=1755154940572",
         width: 1200,
         height: 630,
         alt: "Srila Prabhupada",
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
     description:
       "Founder Acharya of ISKCON. Explore Srila Prabhupada's teachings, events, and galleries.",
     images: [
-      "https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.jpg?updatedAt=1755154940572",
+      "https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.png?updatedAt=1755154940572",
     ],
   },
 };
@@ -85,7 +85,7 @@ export default function RootLayout({
         />
         <meta
           property="og:image"
-          content="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.jpg?updatedAt=1755154940572"
+          content="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.png?updatedAt=1755154940572"
         />
         <meta
           property="og:url"
@@ -104,7 +104,7 @@ export default function RootLayout({
         />
         <meta
           name="twitter:image"
-          content="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.jpg?updatedAt=1755154940572"
+          content="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.png?updatedAt=1755154940572"
         />
         {/* ✅ Structured Data for Rich Results */}
         <script

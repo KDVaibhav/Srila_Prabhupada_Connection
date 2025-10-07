@@ -31,6 +31,12 @@ export class QuoteController {
     return this.quoteService.findOne(id);
   }
 
+  @SkipAuth()
+  @Get('by-date/:month/:day')
+  findByDate(@Param('month') month: string, @Param('day') day: string) {
+    return this.quoteService.findByDate(Number(month), Number(day));
+  }
+
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateQuoteDto: UpdateQuoteDto) {
     return this.quoteService.update(id, updateQuoteDto);
