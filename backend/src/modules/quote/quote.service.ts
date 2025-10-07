@@ -11,7 +11,6 @@ export class QuoteService {
     try {
       const newQuote = new this.quoteModel(createQuoteDto);
       await newQuote.save();
-      console.log(newQuote)
       return { message: 'Quote added successfully' };
     } catch (error) {
       throw new BadRequestException('Error creating quote', error);
@@ -40,7 +39,11 @@ export class QuoteService {
 
   async update(id: string, updateQuoteDto: UpdateQuoteDto) {
     try {
-      const quote = await this.quoteModel.findByIdAndUpdate(id, updateQuoteDto, { new: true });
+      const quote = await this.quoteModel.findByIdAndUpdate(
+        id,
+        updateQuoteDto,
+        { new: true },
+      );
       if (!quote) {
         throw new BadRequestException('Quote not found');
       }
@@ -59,6 +62,57 @@ export class QuoteService {
       return { message: 'Quote deleted successfully' };
     } catch (error) {
       throw new BadRequestException('Error deleting quote', error);
+    }
+  }
+  async findByDate(month: number, day: number) {
+    console.log(month, day);
+    try {
+      return await this.quoteModel.aggregate([
+        // Ensure 'date' is always a Date object
+        {
+          $addFields: {
+            parsedDate: {
+              $cond: [
+                { $eq: [{ $type: '$date' }, 'string'] },
+                {
+                  $dateFromString: {
+                    dateString: '$date',
+                    timezone: 'Asia/Kolkata',
+                  },
+                },
+                '$date',
+              ],
+            },
+          },
+        },
+        // Extract parts (month, day)
+        {
+          $addFields: {
+            parts: {
+              $dateToParts: {
+                date: '$parsedDate',
+                timezone: 'Asia/Kolkata',
+              },
+            },
+          },
+        },
+        // Match month and day
+        {
+          $match: {
+            'parts.month': month,
+            'parts.day': day,
+          },
+        },
+        {
+          $project: {
+            parts: 0,
+            parsedDate: 0,
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error('Aggregation error:', error);
+      throw new BadRequestException('Error fetching quotes by date');
     }
   }
 }

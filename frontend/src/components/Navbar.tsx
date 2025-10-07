@@ -93,7 +93,7 @@ const Logo = () => {
   return (
     <div className="flex gap-2 items-center">
       <Image
-        src="/SPCM_Logo.jpg"
+        src="/SPCM_Logo.png"
         alt="Srila Prabhupada Connection - Mayapur Logo"
         width={70}
         height={70}
