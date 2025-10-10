@@ -23,7 +23,7 @@ const DonationForm = () => {
           <div className="flex flex-col p-2 text-center text-[#530001] font-donation text-xl sm:text-4xl lg:text-6xl">
             <span>Offer Your Support and </span>
             <span>Be Part of Srila Prabhupada </span>
-            <span>Connect Days</span>
+            <span>Connections - Mayapur</span>
           </div>
 
           <Button

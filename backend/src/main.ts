@@ -4,7 +4,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   }); // Enable detailed logs
-  
+
+  // const frontendUrl = process.env.FRONTEND_URL;
+
+  // app.enableCors({ origin: frontendUrl, credentials: true });
 
   await app.listen(5000, '0.0.0.0');
   if (module.hot) {

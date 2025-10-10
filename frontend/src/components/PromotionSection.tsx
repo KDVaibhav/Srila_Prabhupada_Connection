@@ -7,13 +7,13 @@ export default function PromotionSection() {
     <div className="h-56 sm:h-56 xl:h-[25rem]">
       <Carousel slideInterval={5000}>
         <img
-          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/Website%20Home%20Banner.png?updatedAt=1739163337702"
+          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCMPromoEnglish.jpg?updatedAt=1760099642795"
           alt="..."
           className="object-contain w-full h-full"
         />
 
         <img
-          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/PrabhupadaConnectBengali?updatedAt=1759838780545"
+          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCMPromoBengali.jpg?updatedAt=1760099643087"
           alt="..."
           className="object-contain w-full h-full"
         />

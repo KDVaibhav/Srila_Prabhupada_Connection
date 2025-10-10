@@ -2,6 +2,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { IconX } from "@tabler/icons-react";
+import DataInsertModal from "@/components/ui/DataInsertModal";
+import { EventFields } from "../data";
 
 type EventT = {
   _id: string;
@@ -36,7 +39,7 @@ function clsx(...args: (string | false | null | undefined)[]) {
   return args.filter(Boolean).join(" ");
 }
 
-// -------------------- Atoms --------------------
+// -------------------- Icons --------------------
 const IconSearch = (props: any) => (
   <svg
     viewBox="0 0 24 24"
@@ -74,27 +77,42 @@ const IconTimeline = (props: any) => (
     <path strokeLinecap="round" d="M4 6h16M4 12h10M4 18h7" />
   </svg>
 );
-const Chip = ({
-  active,
-  children,
-  onClick,
-}: {
-  active?: boolean;
-  children: React.ReactNode;
-  onClick?: () => void;
-}) => (
-  <button
-    onClick={onClick}
-    className={clsx(
-      "px-3 py-1.5 rounded-full text-sm font-semibold transition border",
-      active
-        ? "bg-primary2 text-white border-primary2 shadow"
-        : "bg-white/70 text-fontApp border-gray-200 hover:bg-white"
-    )}
+const IconCalendar = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    {...props}
   >
-    {children}
-  </button>
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+    />
+  </svg>
 );
+const IconLocation = (props: any) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M17.657 16.657L13.414 12.414a4 4 0 10-1.414 1.414l4.243 4.243a1 1 0 001.414-1.414z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+    />
+  </svg>
+);
+
 const Badge = ({ children }: { children: React.ReactNode }) => (
   <span className="inline-flex items-center gap-1 rounded-full bg-primary2/10 text-primary2 px-2.5 py-1 text-xs font-semibold">
     {children}
@@ -103,7 +121,7 @@ const Badge = ({ children }: { children: React.ReactNode }) => (
 
 // -------------------- Skeletons & Empty --------------------
 const CardSkeleton = () => (
-  <div className="rounded-2xl border border-white/40 bg-white/60 shadow-sm overflow-hidden animate-pulse">
+  <div className="rounded-2xl border border-gray-200 bg-white/60 shadow-sm overflow-hidden animate-pulse">
     <div className="h-44 bg-gray-200" />
     <div className="p-5 space-y-3">
       <div className="h-6 w-2/3 bg-gray-200 rounded" />
@@ -120,7 +138,7 @@ const EmptyState = ({ title, hint }: { title: string; hint?: string }) => (
   </div>
 );
 
-// -------------------- Schedule Modal (preserved) --------------------
+// -------------------- Schedule Modal --------------------
 function ScheduleModal({ open, onClose, onSave, eventId }: any) {
   const [fields, setFields] = useState([
     "Time",
@@ -169,7 +187,7 @@ function ScheduleModal({ open, onClose, onSave, eventId }: any) {
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl border border-white/20 bg-white shadow-2xl">
+      <div className="w-full max-w-4xl mx-4 overflow-hidden rounded-2xl border border-white/20 bg-white shadow-2xl">
         <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-primary2 to-orange-400 text-white">
           <h2 className="text-lg font-bold">Create / Edit Schedule</h2>
           <button
@@ -180,7 +198,7 @@ function ScheduleModal({ open, onClose, onSave, eventId }: any) {
           </button>
         </div>
 
-        <div className="p-6">
+        <div className="p-6 max-h-[70vh] overflow-y-auto">
           <div className="overflow-x-auto rounded-lg border border-gray-200">
             <table className="min-w-full border-collapse">
               <thead className="bg-primary2 text-white">
@@ -240,13 +258,13 @@ function ScheduleModal({ open, onClose, onSave, eventId }: any) {
 
           <div className="mt-4 flex flex-wrap gap-2">
             <button
-              className="rounded-lg bg-gray-100 px-3 py-1.5 hover:bg-gray-200"
+              className="rounded-lg bg-gray-100 px-3 py-1.5 hover:bg-gray-200 text-sm"
               onClick={addField}
             >
               + Add Field
             </button>
             <button
-              className="rounded-lg bg-gray-100 px-3 py-1.5 hover:bg-gray-200"
+              className="rounded-lg bg-gray-100 px-3 py-1.5 hover:bg-gray-200 text-sm"
               onClick={addRow}
             >
               + Add Row
@@ -255,13 +273,13 @@ function ScheduleModal({ open, onClose, onSave, eventId }: any) {
 
           <div className="mt-6 flex justify-end gap-3">
             <button
-              className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm font-semibold"
               onClick={onClose}
             >
               Cancel
             </button>
             <button
-              className="px-4 py-2 rounded-lg bg-primary2 text-white hover:bg-primary2/90"
+              className="px-4 py-2 rounded-lg bg-primary2 text-white hover:bg-primary2/90 text-sm font-semibold"
               onClick={handleSave}
             >
               Save Schedule
@@ -273,7 +291,7 @@ function ScheduleModal({ open, onClose, onSave, eventId }: any) {
   );
 }
 
-// -------------------- Event Detail Modal (refined) --------------------
+// -------------------- Enhanced Event Detail Modal --------------------
 function EventDetailModal({
   open,
   onClose,
@@ -284,7 +302,7 @@ function EventDetailModal({
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    function handleClickOutside(e:any) {
+    function handleClickOutside(e: any) {
       if (modalRef.current && !modalRef.current.contains(e.target)) {
         onClose();
       }
@@ -297,62 +315,78 @@ function EventDetailModal({
   }, [onClose]);
 
   if (!open || !event) return null;
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div ref={modalRef} className="relative">
-        <div className="relative w-full max-w-2xl overflow-hidden rounded-2xl border border-white/20 bg-white shadow-2xl">
-          <button
-            className="absolute top-3 right-3 text-xl text-gray-500 hover:text-black rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-gray-300"
-            onClick={onClose}
-          >
-            ×
-          </button>
 
-          <div className="flex items-center gap-4 p-6 pb-3">
-            <img
-              src={event.imageUrl || "/event-placeholder.jpg"}
-              alt={event.title}
-              className="w-20 h-20 object-cover rounded-xl"
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div
+        ref={modalRef}
+        className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-2xl bg-white shadow-2xl"
+      >
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 z-10 bg-white/90 hover:bg-white text-gray-600 hover:text-black rounded-full p-2 shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary2/50"
+          onClick={onClose}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
             />
-            <div>
-              <h2 className="text-2xl font-extrabold text-fontApp">
-                {event.title}
-              </h2>
-              <div className="mt-1 text-sm text-gray-600 flex flex-wrap items-center gap-2">
-                <Badge>{formatDate(event.date)}</Badge>
-                <span className="text-gray-400">•</span>
-                <span className="inline-flex items-center gap-2">
-                  <svg
-                    className="inline w-5 h-5 text-primary2"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.657 16.657L13.414 12.414a4 4 0 10-1.414 1.414l4.243 4.243a1 1 0 001.414-1.414z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  {event.location}
-                </span>
+          </svg>
+        </button>
+
+        {/* Hero Banner Section */}
+        <div className="relative aspect-[21/9] w-full bg-gray-100">
+          <img
+            src={event.imageUrl || "/event-placeholder.jpg"}
+            alt={event.title}
+            className="w-full h-full object-contain"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+          <div className="absolute bottom-6 left-6 right-6 text-white">
+            <h1 className="text-3xl sm:text-4xl font-bold mb-2 drop-shadow-lg">
+              {event.title}
+            </h1>
+            <div className="flex flex-wrap items-center gap-4 text-sm sm:text-base">
+              <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                <IconCalendar className="w-4 h-4" />
+                <span>{formatDate(event.date)}</span>
               </div>
+              {event.location && (
+                <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                  <IconLocation className="w-4 h-4" />
+                  <span>{event.location}</span>
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
+        {/* Content Section */}
+        <div className="p-6 sm:p-8 max-h-[calc(90vh-16rem)] overflow-y-auto">
+          {/* Description */}
           {event.description && (
-            <p className="px-6 pb-2 text-gray-700">{event.description}</p>
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-fontApp mb-3">
+                About this Event
+              </h3>
+              <p className="text-gray-700 leading-relaxed">
+                {event.description}
+              </p>
+            </div>
           )}
 
+          {/* Schedule */}
           {event.schedule?.fields?.length ? (
-            <div className="px-6 mt-4 pb-6">
-              <h3 className="text-sm font-semibold mb-2 text-primary2">
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold text-fontApp mb-3">
                 Schedule
               </h3>
               <div className="overflow-x-auto rounded-lg ring-1 ring-gray-200">
@@ -360,7 +394,10 @@ function EventDetailModal({
                   <thead>
                     <tr className="bg-primary2 text-white">
                       {event.schedule.fields.map((f: string, i: number) => (
-                        <th key={i} className="py-2 px-3 text-left">
+                        <th
+                          key={i}
+                          className="py-3 px-4 text-left font-semibold"
+                        >
                           {f}
                         </th>
                       ))}
@@ -370,10 +407,13 @@ function EventDetailModal({
                     {event.schedule.rows.map((row: string[], ri: number) => (
                       <tr
                         key={ri}
-                        className={ri % 2 ? "bg-white" : "bg-gray-50"}
+                        className={ri % 2 ? "bg-white" : "bg-gray-50/50"}
                       >
                         {row.map((cell, ci) => (
-                          <td key={ci} className="py-2 px-3">
+                          <td
+                            key={ci}
+                            className="py-3 px-4 border-t border-gray-100"
+                          >
                             {cell}
                           </td>
                         ))}
@@ -385,15 +425,22 @@ function EventDetailModal({
             </div>
           ) : null}
 
-          <div className="px-6 pb-6 flex items-center justify-end gap-3">
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 pt-4 border-t border-gray-200">
             {isAuthenticated && (
               <button
-                className="bg-primary2 text-white px-4 py-2 rounded-xl shadow font-bold hover:bg-primary2/90"
+                className="inline-flex items-center justify-center rounded-xl bg-primary2 px-4 py-2 text-sm font-bold text-white shadow hover:bg-primary2/90 transition-colors"
                 onClick={() => onEditSchedule(event)}
               >
                 {event.schedule ? "Edit Schedule" : "Add Schedule"}
               </button>
             )}
+            <button
+              className="inline-flex items-center justify-center rounded-xl border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={onClose}
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
@@ -411,6 +458,7 @@ export default function EventsPage() {
   const [tab, setTab] = useState<"upcoming" | "past" | "all">("all");
   const [view, setView] = useState<"grid" | "timeline">("grid");
   const [query, setQuery] = useState("");
+  const [openModal, setOpenModal] = useState(false);
   const [location, setLocation] = useState<string>("");
   const [month, setMonth] = useState<string>("");
   const [refresh, setRefresh] = useState(false);
@@ -526,13 +574,20 @@ export default function EventsPage() {
     setScheduleOpen(true);
   };
 
-  // -------------------- UI --------------------
+  const clearFilters = () => {
+    setQuery("");
+    setLocation("");
+    setMonth("");
+  };
+
+  const hasActiveFilters = query || location || month;
+
   return (
     <div className="mt-4 min-h-screen">
       {/* Hero */}
       <div className="relative rounded-2xl isolate w-full h-60 md:h-72 flex items-center justify-center overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1600&q=80"
+          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/PrabhupadaInspectingBhagavatam.jpg?updatedAt=1754987127116"
           alt="Events"
           className="absolute inset-0 h-full w-full object-cover"
         />
@@ -545,107 +600,139 @@ export default function EventsPage() {
             Events
           </h1>
           <p className="text-sm md:text-base text-white/90 mt-2 max-w-2xl mx-auto">
-            Discover gatherings, kirtans, and festivals. Filter by month, place,
-            or search anything.
+            Discover gatherings, kirtans, and festivals. Filter by month,
+            location, or search.
           </p>
         </div>
       </div>
 
-      {/* AppBar */}
-      <div className="sticky top-0 z-40 rounded-2xl mt-2 bg-bgApp2 backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/90 border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
-          {/* Tabs */}
-          <div className="flex items-center gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200">
-            {(["upcoming", "past", "all"] as const).map((t) => (
+      {/* Enhanced AppBar */}
+      <div className="sticky top-0 z-40 rounded-2xl mt-2 bg-white border-b border-gray-300 shadow-lg shadow-gray-400/10">
+        <div className="max-w-7xl mx-auto px-4 py-4 space-y-4">
+          {/* Search and Filters Row */}
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Tabs */}
+            <div className="flex items-center gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200">
+              {(["upcoming", "past", "all"] as const).map((t) => (
+                <button
+                  key={t}
+                  onClick={() => setTab(t)}
+                  className={clsx(
+                    "px-3 py-1.5 rounded-lg text-sm font-semibold capitalize transition",
+                    tab === t
+                      ? "bg-white shadow border border-gray-200 text-primary2"
+                      : "text-gray-600 hover:bg-white"
+                  )}
+                >
+                  {t}
+                </button>
+              ))}
+            </div>
+
+            {/* Search */}
+            <div className="flex-1 min-w-[200px]">
+              <div className="relative">
+                <IconSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search events..."
+                  className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary2/30 text-sm"
+                />
+              </div>
+            </div>
+
+            {/* Location Filter */}
+            <select
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm min-w-[150px]"
+            >
+              <option value="">All Locations</option>
+              {locations.map((loc) => (
+                <option key={loc} value={loc}>
+                  {loc}
+                </option>
+              ))}
+            </select>
+
+            {/* Month Filter */}
+            <select
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm min-w-[150px]"
+            >
+              <option value="">All Months</option>
+              {months.map((m) => {
+                const [y, mo] = m.split("-");
+                const dt = new Date(Number(y), Number(mo) - 1, 1);
+                const label = dt.toLocaleDateString(undefined, {
+                  month: "short",
+                  year: "numeric",
+                });
+                return (
+                  <option key={m} value={m}>
+                    {label}
+                  </option>
+                );
+              })}
+            </select>
+
+            {/* View Toggle */}
+            <div className="flex items-center gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200">
               <button
-                key={t}
-                onClick={() => setTab(t)}
                 className={clsx(
-                  "px-3 py-1.5 rounded-lg text-sm font-semibold capitalize transition",
-                  tab === t
-                    ? "bg-white shadow border border-gray-200"
+                  "px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition",
+                  view === "grid"
+                    ? "bg-white shadow border border-gray-200 text-primary2"
                     : "text-gray-600 hover:bg-white"
                 )}
+                onClick={() => setView("grid")}
               >
-                {t}
+                <IconGrid className="w-4 h-4" />
+                Grid
               </button>
-            ))}
-          </div>
-
-          {/* Search */}
-          <div className="flex-1 min-w-[220px]">
-            <div className="relative">
-              <IconSearch className="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by title, place, description..."
-                className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary2/30"
-              />
+              <button
+                className={clsx(
+                  "px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2 transition",
+                  view === "timeline"
+                    ? "bg-white shadow border border-gray-200 text-primary2"
+                    : "text-gray-600 hover:bg-white"
+                )}
+                onClick={() => setView("timeline")}
+              >
+                <IconTimeline className="w-4 h-4" />
+                Timeline
+              </button>
             </div>
+            {/* Add to Gallery Button */}
+            {isAuthenticated && (
+              <button
+                onClick={() => setOpenModal(true)}
+                className="inline-flex items-center justify-center rounded-xl bg-primary2 px-4 py-2 text-sm font-bold text-white shadow hover:bg-primary2/90 ml-auto"
+              >
+                Add to Events
+              </button>
+            )}
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="px-3 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition"
+              >
+                <IconX className="h-4 w-4" />
+                Clear Filters
+              </button>
+            )}
           </div>
 
-          {/* Location */}
-          <select
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm"
-          >
-            <option value="">All locations</option>
-            {locations.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-
-          {/* Month */}
-          <select
-            value={month}
-            onChange={(e) => setMonth(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm"
-          >
-            <option value="">Any month</option>
-            {months.map((m) => {
-              const [y, mo] = m.split("-");
-              const dt = new Date(Number(y), Number(mo) - 1, 1);
-              const label = dt.toLocaleDateString(undefined, {
-                month: "short",
-                year: "numeric",
-              });
-              return (
-                <option key={m} value={m}>
-                  {label}
-                </option>
-              );
-            })}
-          </select>
-
-          {/* View toggle */}
-          <div className="flex items-center gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200">
-            <button
-              className={clsx(
-                "px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2",
-                view === "grid" ? "bg-white shadow" : "text-gray-600"
-              )}
-              onClick={() => setView("grid")}
-              aria-label="Grid view"
-            >
-              <IconGrid className="w-4 h-4" />
-              Grid
-            </button>
-            <button
-              className={clsx(
-                "px-3 py-1.5 rounded-lg text-sm font-semibold flex items-center gap-2",
-                view === "timeline" ? "bg-white shadow" : "text-gray-600"
-              )}
-              onClick={() => setView("timeline")}
-              aria-label="Timeline view"
-            >
-              <IconTimeline className="w-4 h-4" />
-              Timeline
-            </button>
-          </div>
+          {/* Results Count */}
+          {!loading && (
+            <div className="text-sm text-gray-600">
+              Showing {filtered.length} of {parents.length} events
+              {hasActiveFilters && " (filtered)"}
+            </div>
+          )}
         </div>
       </div>
 
@@ -659,7 +746,7 @@ export default function EventsPage() {
 
         {/* Loading */}
         {loading ? (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
@@ -673,16 +760,16 @@ export default function EventsPage() {
           <GridView
             events={filtered}
             childEventsByParent={childEventsByParent}
-            isAuthenticated={isAuthenticated}
             onOpenDetail={openDetail}
             onOpenSchedule={openSchedule}
+            isAuthenticated={isAuthenticated}
           />
         ) : (
           <TimelineView
             events={filtered}
-            isAuthenticated={isAuthenticated}
             onOpenDetail={openDetail}
             onOpenSchedule={openSchedule}
+            isAuthenticated={isAuthenticated}
           />
         )}
       </div>
@@ -701,115 +788,108 @@ export default function EventsPage() {
         onSave={() => setRefresh((r) => !r)}
         eventId={scheduleEvent?._id}
       />
+      {isAuthenticated && (
+        <DataInsertModal
+          openModal={openModal}
+          onCloseModal={() => setOpenModal(false)}
+          title="Event"
+          fields={EventFields}
+        />
+      )}
     </div>
   );
 }
 
-// -------------------- Views --------------------
+// -------------------- Grid View --------------------
 function GridView({
   events,
   childEventsByParent,
-  isAuthenticated,
   onOpenDetail,
   onOpenSchedule,
+  isAuthenticated,
 }: {
   events: EventT[];
   childEventsByParent: Record<string, EventT[]>;
-  isAuthenticated: boolean;
   onOpenDetail: (e: EventT) => void;
   onOpenSchedule: (e: EventT) => void;
+  isAuthenticated: boolean;
 }) {
   return (
-    <div className=" grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {events.map((e) => (
         <article
           key={e._id}
-          className="group relative flex flex-col overflow-hidden rounded-2xl border border-transparent bg-white/60 shadow-sm transition hover:-translate-y-0.5 hover:shadow-xl"
-          style={{
-            backgroundImage:
-              "linear-gradient(white, white), radial-gradient(1200px circle at 0% 0%, rgba(255,87,34,0.25), transparent 40%)",
-            backgroundOrigin: "border-box",
-            backgroundClip: "padding-box, border-box",
-          }}
+          className="group relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white/60 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
         >
-          <div className="relative h-44">
+          <div className="relative aspect-[16/9] overflow-hidden bg-gray-100">
             <img
               src={e.imageUrl || "/event-placeholder.jpg"}
               alt={e.title}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
             />
             <div className="absolute top-3 left-3">
               <Badge>{formatDate(e.date)}</Badge>
             </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
           </div>
 
           <div className="p-5 flex-1 flex flex-col">
             <h3
-              className="text-xl font-extrabold text-fontApp group-hover:text-primary2 transition-colors cursor-pointer"
+              className="text-xl font-bold text-fontApp group-hover:text-primary2 transition-colors cursor-pointer line-clamp-2 mb-2"
               onClick={() => onOpenDetail(e)}
             >
               {e.title}
             </h3>
-            <div className="mt-1 mb-3 flex items-center gap-2 text-gray-600">
-              <svg
-                className="w-4 h-4 text-primary2"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M17.657 16.657L13.414 12.414a4 4 0 10-1.414 1.414l4.243 4.243a1 1 0 001.414-1.414z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <span className="truncate">{e.location}</span>
+
+            <div className="flex items-center gap-2 text-gray-600 mb-3">
+              <IconLocation className="w-4 h-4 text-primary2 flex-shrink-0" />
+              <span className="truncate text-sm">{e.location}</span>
             </div>
+
             {e.description && (
-              <p className="text-gray-700 line-clamp-3">{e.description}</p>
+              <p className="text-gray-700 line-clamp-3 text-sm mb-4 flex-1">
+                {e.description}
+              </p>
             )}
 
             {/* Sub-events */}
             {childEventsByParent[e._id]?.length ? (
-              <div className="mt-4">
+              <div className="mb-4">
                 <div className="text-xs font-semibold text-gray-600 mb-2">
-                  Sub events
+                  Sub Events
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {childEventsByParent[e._id].map((c) => (
+                <div className="flex flex-wrap gap-1">
+                  {childEventsByParent[e._id].slice(0, 3).map((c) => (
                     <button
                       key={c._id}
-                      type="button"
                       onClick={() => onOpenDetail(c)}
-                      title="View sub-event"
-                      className="rounded-full bg-fontApp/10 text-fontApp px-2.5 py-1 text-xs font-semibold hover:bg-fontApp/20 transition focus:outline-none focus:ring-2 focus:ring-fontApp/30"
+                      className="rounded-full bg-primary2/10 text-primary2 px-2 py-1 text-xs font-medium hover:bg-primary2/20 transition-colors"
                     >
                       {c.title}
                     </button>
                   ))}
+                  {childEventsByParent[e._id].length > 3 && (
+                    <span className="rounded-full bg-gray-100 text-gray-600 px-2 py-1 text-xs">
+                      +{childEventsByParent[e._id].length - 3} more
+                    </span>
+                  )}
                 </div>
               </div>
             ) : null}
 
-            <div className="mt-auto pt-4 flex items-center justify-between gap-3">
+            <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-100">
               <button
-                className="px-3 py-2 rounded-lg text-sm font-bold text-primary2 hover:bg-primary2/10"
+                className="text-primary2 font-semibold text-sm hover:text-primary2/80 transition-colors"
                 onClick={() => onOpenDetail(e)}
               >
-                View details
+                View Details
               </button>
               {isAuthenticated && (
                 <button
-                  className="inline-flex items-center justify-center rounded-lg bg-primary2 px-3 py-2 text-sm font-bold text-white shadow hover:bg-primary2/90"
+                  className="inline-flex items-center justify-center rounded-lg bg-primary2 px-3 py-2 text-xs font-bold text-white shadow hover:bg-primary2/90 transition-colors"
                   onClick={() => onOpenSchedule(e)}
                 >
-                  {e.schedule ? "Edit schedule" : "Add schedule"}
+                  {e.schedule ? "Edit Schedule" : "Add Schedule"}
                 </button>
               )}
             </div>
@@ -820,16 +900,17 @@ function GridView({
   );
 }
 
+// -------------------- Timeline View --------------------
 function TimelineView({
   events,
-  isAuthenticated,
   onOpenDetail,
   onOpenSchedule,
+  isAuthenticated,
 }: {
   events: EventT[];
-  isAuthenticated: boolean;
   onOpenDetail: (e: EventT) => void;
   onOpenSchedule: (e: EventT) => void;
+  isAuthenticated: boolean;
 }) {
   // Group by month
   const groups = useMemo(() => {
@@ -852,8 +933,8 @@ function TimelineView({
   return (
     <div className="relative">
       <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-primary2/30 to-transparent" />
-      <div className="space-y-10">
-        {groups.map(([k, arr], gi) => {
+      <div className="space-y-12">
+        {groups.map(([k, arr]) => {
           const [y, mo] = k.split("-");
           const dt = new Date(Number(y), Number(mo) - 1, 1);
           const label = isFinite(dt.getTime())
@@ -865,64 +946,60 @@ function TimelineView({
 
           return (
             <section key={k} className="relative">
-              <div className="flex items-center gap-3 mb-4 md:mb-8">
-                <div className="h-2 w-2 rounded-full bg-primary2" />
-                <h2 className="text-sm md:text-base font-bold text-fontApp2">
-                  {label}
-                </h2>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="h-3 w-3 rounded-full bg-primary2 border-2 border-white shadow" />
+                <h2 className="text-lg font-bold text-fontApp">{label}</h2>
+                <Badge>{arr.length} events</Badge>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {arr.map((e, i) => (
                   <article
                     key={e._id}
-                    className={clsx(
-                      "relative rounded-2xl border bg-white/70 shadow-sm p-5",
-                      "hover:shadow-lg hover:-translate-y-0.5 transition"
-                    )}
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(white, white), radial-gradient(800px circle at 0% 0%, rgba(255,87,34,0.18), transparent 40%)",
-                      backgroundOrigin: "border-box",
-                      backgroundClip: "padding-box, border-box",
-                    }}
+                    className="relative rounded-2xl border border-gray-200 bg-white/70 shadow-sm p-5 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300"
                   >
                     <div className="flex items-start gap-4">
-                      <img
-                        src={e.imageUrl || "/event-placeholder.jpg"}
-                        alt={e.title}
-                        className="w-24 h-24 rounded-xl object-cover flex-shrink-0"
-                      />
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-2 mb-1">
+                      <div className="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+                        <img
+                          src={e.imageUrl || "/event-placeholder.jpg"}
+                          alt={e.title}
+                          className="w-full h-full object-contain"
+                        />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 mb-2">
                           <Badge>{formatDate(e.date)}</Badge>
-                          {e.location && (
-                            <span className="text-xs text-gray-600">
-                              • {e.location}
-                            </span>
-                          )}
                         </div>
-                        <h3 className="text-lg font-extrabold text-fontApp truncate">
+                        <h3
+                          className="text-lg font-bold text-fontApp cursor-pointer hover:text-primary2 transition-colors line-clamp-2"
+                          onClick={() => onOpenDetail(e)}
+                        >
                           {e.title}
                         </h3>
+                        {e.location && (
+                          <div className="flex items-center gap-2 text-gray-600 mt-1">
+                            <IconLocation className="w-3 h-3 text-primary2" />
+                            <span className="text-sm">{e.location}</span>
+                          </div>
+                        )}
                         {e.description && (
-                          <p className="text-gray-700 line-clamp-2 mt-1">
+                          <p className="text-gray-700 line-clamp-2 mt-2 text-sm">
                             {e.description}
                           </p>
                         )}
                         <div className="mt-3 flex items-center gap-3">
                           <button
-                            className="text-primary2 font-bold text-sm hover:underline"
+                            className="text-primary2 font-semibold text-sm hover:text-primary2/80 transition-colors"
                             onClick={() => onOpenDetail(e)}
                           >
-                            View details
+                            View Details
                           </button>
                           {isAuthenticated && (
                             <button
-                              className="inline-flex items-center justify-center rounded-lg bg-primary2 px-3 py-1.5 text-xs font-bold text-white shadow hover:bg-primary2/90"
+                              className="inline-flex items-center justify-center rounded-lg bg-primary2 px-3 py-1.5 text-xs font-bold text-white shadow hover:bg-primary2/90 transition-colors"
                               onClick={() => onOpenSchedule(e)}
                             >
-                              {e.schedule ? "Edit schedule" : "Add schedule"}
+                              {e.schedule ? "Edit Schedule" : "Add Schedule"}
                             </button>
                           )}
                         </div>

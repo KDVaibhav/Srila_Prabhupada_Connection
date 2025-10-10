@@ -17,11 +17,11 @@ export const QuoteFields = [
 export const EventFields = [
   { name: "title", type: "string" },
   { name: "description", type: "string" },
-  { name: "type", type: "select", options: ["parent", "child"]},
+  { name: "type", type: "select", options: ["parent", "child"] },
   { name: "location", type: "string" },
   { name: "imageUrl", type: "img" },
   { name: "date", type: "date" },
-]
+];
 
 export const BlogFields = [
   { name: "Title of the Blog", type: "string" },
@@ -53,7 +53,16 @@ export const JoinUsFields = [
   },
   { name: "message", type: "string" },
 ];
-
+export const TEAM_MEMBERS = [
+  {
+    index: 1,
+    name: "Janmastami Dasa",
+    imgUrl:
+      "https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/AboutUs/JP.svg?updatedAt=1760090571303",
+    description:
+      "Janmāṣṭamī Dāsa joined ISKCON in 1977, distributed books throughout America until 1992, and then served as the president of the ISKCON Denver Temple from 1992 to 1996. He then moved to Mayapur and, under the guidance of the GBC, served as the Director of the Mayapur Institute from 2000 to 2009. He now coordinates the Śrīla Prabhupāda Connection-Mayapur initiative to help devotees understand Prabhupāda’s role in their lives, thus empowering their service and bhakti by deepening their relationship with him.",
+  },
+];
 export const DONOR_TIERS = [
   {
     name: "Kaustubha",
