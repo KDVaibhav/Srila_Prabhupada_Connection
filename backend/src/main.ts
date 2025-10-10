@@ -5,11 +5,11 @@ async function bootstrap() {
     logger: ['log', 'error', 'warn', 'debug', 'verbose'],
   }); // Enable detailed logs
 
-  const frontendUrl = process.env.FRONTEND_URL;
+  // const frontendUrl = process.env.FRONTEND_URL;
 
-  app.enableCors({ origin: frontendUrl, credentials: true });
+  // app.enableCors({ origin: frontendUrl, credentials: true });
 
-  await app.listen(5001, '0.0.0.0');
+  await app.listen(5000, '0.0.0.0');
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
