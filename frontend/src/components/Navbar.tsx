@@ -20,6 +20,10 @@ const Navbar = () => {
     if (typeof window !== "undefined" && window.innerWidth < 768) {
       setIsOpen(false);
     }
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(setAuth({ isAuthenticated: true }));
+    }
   }, [pathname]);
   const { isAuthenticated, user, windowSize } = useSelector(
     (state: {
@@ -44,11 +48,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full flex gap-4 top-1 z-[100] sticky">
+    <nav className="w-full flex gap-4 top-1 z-[100]">
       {/* Main Nav */}
       <div className="relative flex flex-col bg-white backdrop-blur-md w-full shadow-md rounded-2xl">
         <div className="flex justify-between pr-2 items-center">
-          <Logo />
+          <Link href={"/"}>
+            <Logo />
+          </Link>
           {windowSize < 1024 ? (
             <MobileMenuToggle isOpen={isOpen} toggleNavBar={toggleNavBar} />
           ) : (
@@ -93,7 +99,7 @@ const Logo = () => {
   return (
     <div className="flex gap-2 items-center">
       <Image
-        src="/SPCM_Logo.png"
+        src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCM_Logo.png?updatedAt=1759838822106"
         alt="Srila Prabhupada Connection - Mayapur Logo"
         width={70}
         height={70}

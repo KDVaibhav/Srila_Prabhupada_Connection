@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Unna, Roboto } from "next/font/google";
+import { Geist, Geist_Mono, Unna, Roboto, Urbanist } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "./Providers";
@@ -25,6 +25,12 @@ const unna = Unna({
   variable: "--font-unna",
   subsets: ["latin"],
   weight: ["400"], // Regular
+});
+
+const urbanist = Urbanist({
+  variable: "--font-urbanist",
+  subsets: ["latin"],
+  weight: ["600"], // Regular
 });
 
 export const metadata: Metadata = {
@@ -125,27 +131,23 @@ export default function RootLayout({
           }}
         />
         <link
+          rel="icon"
+          type="image/png"
+          href="/favicon-96x96.png"
+          sizes="96x96"
+        />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link
           rel="apple-touch-icon"
           sizes="180x180"
           href="/apple-touch-icon.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
 
       <body
-        className={`px-2 md:px-20  bg-bgApp ${roboto.variable} ${geistSans.variable} ${geistMono.variable} ${unna.variable}  antialiased`}
+        className={`px-2 md:px-20  bg-bgApp ${roboto.variable} ${geistSans.variable} ${geistMono.variable} ${unna.variable} ${urbanist.variable} antialiased`}
       >
         <Providers>
           <Navbar />

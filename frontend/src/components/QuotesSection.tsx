@@ -45,7 +45,7 @@ const QuotesSection = () => {
 
   useEffect(() => {
     const date = new Date();
-    const day = date.getDate();
+    const day = date.getDate()+1;
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     setDay(day);
@@ -54,66 +54,6 @@ const QuotesSection = () => {
     fetchQuotes(day, month);
   }, []);
 
-  // const increaseDay = async () => {
-  //   if (day === 31) {
-  //     if (month === 12) {
-  //       setDay(1);
-  //       setMonth(1);
-  //       setYear((prev) => prev + 1);
-  //     } else {
-  //       setDay(1);
-  //       setMonth((prev) => prev + 1);
-  //     }
-  //   } else if (day === 28 && month === 2) {
-  //     if (year % 4 === 0) {
-  //       setDay(29);
-  //     } else {
-  //       setDay(1);
-  //       setMonth(3);
-  //     }
-  //   } else if (day === 30) {
-  //     const largeMonths = [1, 3, 5, 7, 8, 10];
-  //     if (largeMonths.includes(month)) {
-  //       setDay(31);
-  //     } else {
-  //       setDay(1);
-  //       setMonth((prev) => prev + 1);
-  //     }
-  //   }
-  // };
-
-  // const decreaseDay = async () => {
-  //   if (month === 1) {
-  //     if (day === 1) {
-  //       setDay(31);
-  //       setMonth(12);
-  //       setYear((prev) => prev - 1);
-  //     } else {
-  //       setDay((prev) => prev - 1);
-  //     }
-  //   } else if (month === 3) {
-  //     if (day === 1) {
-  //       if (year % 4 === 0) {
-  //         setDay(29);
-  //         setMonth(2);
-  //       } else {
-  //         setDay(28);
-  //         setMonth(2);
-  //       }
-  //     } else {
-  //       setDay((prev) => prev - 1);
-  //     }
-  //   } else if (day === 1) {
-  //     const largeMonths = [1, 3, 5, 7, 8, 10];
-  //     if (largeMonths.includes(month - 1)) {
-  //       setDay(31);
-  //       setMonth((prev) => prev - 1);
-  //     } else {
-  //       setDay(30);
-  //       setMonth((prev) => prev - 1);
-  //     }
-  //   }
-  // };
 
   const nextQuote = async () => {
     const newDate = new Date(year, month - 1, day + 1);
@@ -132,14 +72,14 @@ const QuotesSection = () => {
   return (
     
     <div className="flex flex-col items-center justify-center p-4 bg-bgApp2 rounded-2xl">
-      <div className="flex flex-col md:flex-row items-center gap-6 md:gap-10 w-full max-w-4xl">
+      <div className="flex flex-col sm:flex-row items-center gap-6 sm:gap-10 w-full max-w-4xl">
         <div className="flex justify-center w-full md:w-auto">
           <Image
             src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SP%20Quotes%20Image.png?updatedAt=1739163938843"
             height={400}
             width={400}
             alt="SP_Quotes.png"
-            className="w-32 h-32 md:w-52 md:h-52"
+            className="w-32 h-32 sm:w-52 sm:h-52"
           />
         </div>
 
@@ -157,24 +97,29 @@ const QuotesSection = () => {
               Srila Prabhupada Quote
             </h2>
 
-            <AnimatePresence mode="wait">
-              {loading ? (
-                <div>Loading...</div>
-              ) : (
-                quotes.length > 0 && (
-                  <motion.div
-                    key={currentIndex}
-                    className="text-center text-fontApp mt-4 text-base md:text-lg italic px-2"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    "{quotes[currentIndex].quote}"
-                  </motion.div>
-                )
-              )}
-            </AnimatePresence>
+            {/* Fixed height scrollable quote area - FIXED */}
+            <div className="w-full h-32 sm:h-40 mt-4 overflow-y-auto">
+              <AnimatePresence mode="wait">
+                {loading ? (
+                  <div className="flex items-center justify-center h-full w-full">
+                    <div className="text-gray-500">Loading...</div>
+                  </div>
+                ) : (
+                  quotes.length > 0 && (
+                    <motion.div
+                      key={currentIndex}
+                      className="text-center text-fontApp text-base md:text-lg italic px-2 min-h-full flex items-center justify-center"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      "{quotes[currentIndex].quote}"
+                    </motion.div>
+                  )
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Date & Location */}
             <div className="flex gap-1 text-sm text-gray-500 mt-4">

@@ -67,7 +67,9 @@ export default function DonatePage() {
     // Wire this to your backend/gateway.
     // For now we just log the intent.
     console.log({ amount, isRecurring, method, donor });
-    alert("Kindly do a direct bank transfer to the account mentioned there and please share the screenshot and address details with us at srilaprabhupadaconnectionm@gmail.com for creating receipt and 80G certificate, We appreciate for your Support");
+    alert(
+      "Kindly do a direct bank transfer to the account mentioned there and please share the screenshot and address details with us at srilaprabhupadaconnectionm@gmail.com for creating receipt and 80G certificate, We appreciate for your Support"
+    );
   };
 
   // Build a cross‑app UPI intent link
@@ -435,7 +437,11 @@ export default function DonatePage() {
                     </p>
                     <button
                       disabled={!isValid || payLoading}
-                      onClick={()=>alert("At this moment we are not supporting card payments, kindly UPI or do a bank transfer")}
+                      onClick={() =>
+                        alert(
+                          "At this moment we are not supporting card payments, kindly UPI or do a bank transfer"
+                        )
+                      }
                       className={`mt-3 inline-flex items-center justify-center rounded-xl px-5 py-3 font-semibold text-white shadow transition ${
                         isValid && !payLoading
                           ? "bg-[#FF5722] hover:opacity-90"
@@ -484,9 +490,10 @@ export default function DonatePage() {
                         )}
                       </div>
                       <p className="text-xs text-[#034242]/60">
-                        After the transfer, please email or whatsapp your transaction UTR
-                        and contact details to receive a receipt. You will
-                        receive an acknowledgement within 24–48 hours.
+                        After the transfer, please email or whatsapp your
+                        transaction UTR and contact details to receive a
+                        receipt. You will receive an acknowledgement within
+                        24–48 hours.
                       </p>
                     </div>
                     <div className="rounded-2xl bg-gradient-to-br from-[#004D40] to-[#59B2B2] p-6 text-white">
@@ -506,7 +513,10 @@ export default function DonatePage() {
               {/* Primary CTA */}
               <button
                 onClick={() => {
-                  if (method === "gateway") return alert("At this moment we are not supporting card payments, kindly UPI or do a bank transfer");
+                  if (method === "gateway")
+                    return alert(
+                      "At this moment we are not supporting card payments, kindly UPI or do a bank transfer"
+                    );
                   if (method === "upi")
                     return alert(
                       "Use the UPI button above or scan the QR to complete payment."
@@ -537,14 +547,14 @@ export default function DonatePage() {
       <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-10">
         <div className="rounded-3xl border border-[#004D40]/10 bg-white/70 backdrop-blur p-6 sm:p-10 shadow-sm">
           <h2 className="text-3xl font-bold text-[#034242]">
-            Welcome to Our Srila Prabhupada Connection - Mayapur
+            🌸 Welcome to Śrīla Prabhupāda Connection – Mayapur
           </h2>
           <p className="mt-4 text-[#034242]/80">
-            Thank you for visiting our donation page. Your generous contribution
-            helps us spread the teachings of Krishna consciousness and support
-            those on their spiritual journey. Together, we can make a difference
-            by nurturing the souls who seek the divine path and creating a world
-            filled with love, peace, and devotion.
+            Thank you for visiting our donation page. Your generosity enables us
+            to implement innovative and effective means to connect devotees’
+            hearts with Srila Prabhupada and support them on their spiritual
+            journey. Together, we can nurture souls seeking the divine path and
+            build a world filled with love, peace, and devotion.
           </p>
           <p className="mt-3 text-[#034242]/80">
             By donating, you are not just offering financial support—you are
@@ -553,78 +563,104 @@ export default function DonatePage() {
             size, is a step towards spiritual enlightenment for all.
           </p>
           <p className="mt-3 text-[#034242]/80">
-            May Krishna bless you abundantly for your kindness and devotion.
+            🙏 May Krishna bless you abundantly for your kindness and devotion.
+          </p>
+        </div>
+      </section>
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="rounded-3xl border border-[#004D40]/10 bg-white/70 backdrop-blur p-6 sm:p-10 shadow-sm">
+          <h3 className="text-3xl font-bold text-[#034242]">
+            ✨ Why Your Support Matters
+          </h3>
+          <p className="mt-3 text-[#034242]/80">
+            Śrīla Prabhupāda taught from the Padma Purāṇa:
+            <blockquote className="mt-2 text-sm sm:text-base italic text-[#034242]/80 border-x-4 px-4 py-2 border-[#FF69B4]">
+              <div>
+                Above the worship of Lord Viṣṇu is the rendering of service to
+                Vaiṣṇavas.
+              </div>
+              <div className="text-end">(Quoted in CC Madhya 11.31)</div>
+            </blockquote>
+          </p>
+          <p className="mt-3 text-[#034242]/80">
+            At the Śrīla Prabhupāda Connection – Mayapur, we focus on Vaiṣṇava
+            sevā, especially by serving the greatest Vaiṣṇava—Śrīla Prabhupāda
+            himself. Your donation directly strengthens his mission and allows
+            us to share his śakti imbued with loving compassion.
+          </p>
+        </div>
+      </section>
+      <section className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 pb-10">
+        <div className="rounded-3xl border border-[#004D40]/10 bg-white/70 backdrop-blur p-6 sm:p-10 shadow-sm">
+          <h3 className="text-3xl font-bold text-[#034242]">
+            🌺 The Blessings of Giving
+          </h3>
+          <p className="mt-3 text-[#034242]/80">
+            When you donate with love, you are:{" "}
+            <ul className="mt-3 space-y-2 text-sm sm:text-base text-[#034242]/80">
+              <li> • Engaging in meaningful Vaiṣṇava sevā..</li>
+              <li> • Receiving Kṛṣṇa’s blissful reciprocation.</li>
+              <li> • Accelerating your own spiritual development.</li>
+              <li>
+                • Deepening your loving relationship with Śrīla Prabhupāda and
+                thus pleasing your dīkṣā-guru.
+              </li>
+            </ul>
           </p>
         </div>
       </section>
 
       {/* SPECIFIC WAYS */}
       <section className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pb-6">
-        <h3 className="text-2xl font-bold text-[#034242]">
-          Specific Ways You Can Help and the Benefits
-        </h3>
         <div className="mt-6 grid lg:grid-cols-2 gap-6">
           <article className="rounded-2xl border border-[#004D40]/10 bg-white p-6 shadow-sm">
-            <blockquote className="text-sm sm:text-base italic text-[#034242]/80 border-l-4 pl-4 border-[#FF69B4]">
-              Śrīla Prabhupāda often quotes from the Padma Purāṇa: “Above the
-              worship of Lord Viṣṇu is the rendering of service to Vaiṣṇavas….”
-            </blockquote>
-            <p className="mt-4 text-sm sm:text-base text-[#034242]/80">
-              The Srila Prabhupada Connection - Mayapur is all about Vaiṣṇava
-              sevā by focusing on serving the greatest of all Vaiṣṇavas, Śrīla
-              Prabhupāda:
+            <h3 className="text-2xl font-bold text-[#034242] mb-2">
+              🌿 Specific Ways Your Contribution Helps{" "}
+            </h3>
+            <p className="text-sm sm:text-base text-[#034242]/80">
+              With your generosity, we can:
             </p>
             <ul className="mt-3 space-y-2 text-sm sm:text-base text-[#034242]/80">
+              <li>🍛 Distribute prasādam to nourish body and soul.</li>
               <li>
-                ➔ We are trying our best to strengthen his mission by deepening
-                our relationships with him so that we can access his śakti,
-                which is imbued with loving compassion.
+                🎁 Offer gifts to our local schoolchildren through our
+                transcendental competitions that inspire love for Śrīla
+                Prabhupāda.
               </li>
               <li>
-                ➔ One of the best ways to deepen our relationship with him is by
-                engaging in the six loving exchanges described in Upadeśāmṛta:
-                “Offering gifts in charity, accepting charitable gifts,
-                revealing one’s mind in confidence, inquiring confidentially,
-                accepting prasāda and offering prasāda are the six symptoms of
-                love shared by one devotee and another.”
+                🌸 Host Śrīla Prabhupāda Connect Days focused on loving
+                exchanges and seva.
               </li>
-              <li className="text-xs sm:text-sm text-[#034242]/60">
-                We read in the purport: “…simply by reciprocating in these six
-                ways, an ordinary man can fully revive his dormant Kṛṣṇa
-                consciousness.”
+              <li>
+                📖 Offer our Śrīla Prabhupāda Introductory Course to thousands
+                of devotees utilizing student-centered learning facilitation
+                deeply rooted in devotional practice.{" "}
               </li>
             </ul>
           </article>
           <article className="rounded-2xl border border-[#004D40]/10 bg-white p-6 shadow-sm">
-            <p className="text-sm sm:text-base text-[#034242]/80">
-              Śrīla Prabhupāda spread Kṛṣṇa consciousness worldwide with these
-              loving exchanges, and our initiative emphasizes them with
-              expenditures supporting:
-            </p>
-            <ul className="mt-3 space-y-2 text-sm sm:text-base text-[#034242]/80">
-              <li>➔ Prasādam distribution.</li>
-              <li>
-                ➔ Gifts to local schoolchildren for transcendental competitions
-                that deepen their appreciation of Śrīla Prabhupāda.
-              </li>
-              <li>
-                ➔ Devotee care—revealing one’s mind in confidence and inquiring
-                confidentially.
-              </li>
-              <li>
-                ➔ Śrīla Prabhupāda Connect Days focused on these exchanges.
-              </li>
-              <li>
-                ➔ Our Śrīla Prabhupāda Introductory Course with student‑centered
-                learning that frequently engages these exchanges.
-              </li>
-            </ul>
-            <p className="mt-4 text-sm sm:text-base text-[#034242]/80">
-              By donating with love, you will receive Kṛṣṇa’s blissful
-              reciprocation for significant Vaiṣṇava sevā, accelerate your
-              spiritual development, and deepen your loving relationships with
-              Śrīla Prabhupāda and your dīkṣā‑guru.
-            </p>
+            <div className="text-sm sm:text-base text-[#034242]/80 gap-2">
+              <p className="mb-2">
+                Vraja Vinoda Shyama Prabhu, ISKCON Mayapur’s CFO, attended the
+                launch of the course to understand how to best facilitate it,
+                and he made the following comments:
+              </p>
+              <p className="font-semibold">
+                “When I enrolled in the Srila Prabhupada Introduction Course, I
+                expected to gain some historical knowledge about the life and
+                mission of the Founder-Acharya of ISKCON. What I received,
+                however, was far more profound, more intimate, and
+                transformative. This was not merely a course of dates, places,
+                and events; it was a living journey into Srila Prabhupada’s
+                heart, struggles, and victories. By the end, I had not only
+                learned about Srila Prabhupada, but I also felt closer to him in
+                a way I had never imagined possible.
+              </p>
+              <p className="font-semibold">
+                Attending the Srila Prabhupada Introduction Course was one of
+                the most wonderful experiences of my devotional journey.”
+              </p>
+            </div>
           </article>
         </div>
       </section>
@@ -754,7 +790,11 @@ function Faq({ q, a }: { q: string; a: string }) {
           ⌄
         </span>
       </button>
-      {open && <p className="mt-3 text-sm text-[#034242]/80 transition duration-300 ease-in-out">{a}</p>}
+      {open && (
+        <p className="mt-3 text-sm text-[#034242]/80 transition duration-300 ease-in-out">
+          {a}
+        </p>
+      )}
     </div>
   );
 }

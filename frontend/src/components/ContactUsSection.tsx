@@ -58,11 +58,11 @@ const ContactUsSection = () => {
           <div className="flex flex-col gap-2 p-2">
             <div className="flex items-center gap-2">
               <DIcons.Phone className="text-white bg-primary2 rounded-full w-10 h-10 p-2" />
-              +91 9679331108
+              +91 9332892282
             </div>
             <div className="flex items-center gap-2">
               <DIcons.Mail className="text-white bg-primary2 rounded-full w-10 h-10 p-2" />
-              srilaprabhupadaconnectionm@gmail.com
+              srilaprabhupadaconnection@iskconmayapur.com
             </div>
           </div>
         </div>
@@ -87,14 +87,14 @@ const ContactUsSection = () => {
           <div className="flex flex-wrap items-center justify-center gap-5 ">
             <Link
               aria-label="Logo"
-              href="https://www.instagram.com/prabhupadanetwork/#"
+              href="https://www.instagram.com/spcmayapur"
               rel="noreferrer"
               target="_blank"
               className={Underline}
             >
               <DIcons.Instagram strokeWidth={1.5} className="h-5 w-5" />
             </Link>
-            <Link
+            {/* <Link
               aria-label="Logo"
               href="https://x.com/prabhupadateam"
               rel="noreferrer"
@@ -102,17 +102,17 @@ const ContactUsSection = () => {
               className={Underline}
             >
               <DIcons.X className="h-5 w-5" />
-            </Link>
+            </Link> */}
             <Link
               aria-label="Logo"
-              href="https://api.whatsapp.com/send?phone=919679331108"
+              href="https://api.whatsapp.com/send?phone=919332892282"
               rel="noreferrer"
               target="_blank"
               className={Underline}
             >
               <DIcons.WhatsApp className="h-5 w-5" />
             </Link>
-            <Link
+            {/* <Link
               aria-label="Logo"
               href="https://www.facebook.com/people/Prabhupada-Network/61562961872679/"
               rel="noreferrer"
@@ -120,10 +120,10 @@ const ContactUsSection = () => {
               className={Underline}
             >
               <DIcons.Facebook className="h-5 w-5" />
-            </Link>
+            </Link> */}
             <Link
               aria-label="Logo"
-              href="https://www.youtube.com/@prabhupadanetwork"
+              href="https://www.youtube.com/@spcmayapur"
               rel="noreferrer"
               target="_blank"
               className={Underline}

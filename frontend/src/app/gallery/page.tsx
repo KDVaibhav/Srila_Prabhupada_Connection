@@ -5,15 +5,26 @@ import { useEffect, useMemo, useState } from "react";
 import GallleryItem, { GalleryItemData } from "@/components/GallleryItem";
 import { useSelector } from "react-redux";
 import { Modal, TextInput, Select, FileInput, Button } from "flowbite-react";
+import {
+  IconSearch,
+  IconFilter,
+  IconX,
+  IconCalendar,
+  IconPhoto,
+  IconVideo,
+  IconStack,
+} from "@tabler/icons-react";
 
 function clsx(...args: (string | false | null | undefined)[]) {
   return args.filter(Boolean).join(" ");
 }
+
 const Badge = ({ children }: { children: React.ReactNode }) => (
   <span className="inline-flex items-center gap-1 rounded-full bg-primary2/10 text-primary2 px-2.5 py-1 text-xs font-semibold">
     {children}
   </span>
 );
+
 const CardSkeleton = () => (
   <div className="rounded-2xl border border-white/40 bg-white/60 shadow-sm overflow-hidden animate-pulse">
     <div className="h-44 bg-gray-200" />
@@ -33,7 +44,13 @@ export default function GalleryPage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [active, setActive] = useState<GalleryItemData | null>(null);
   const [openModal, setOpenModal] = useState(false);
-  const [events, setEvents] = useState<{ _id: string; title: string, date: Date }[]>([]);
+  const [events, setEvents] = useState<
+    { _id: string; title: string; date: Date }[]
+  >([]);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState<string>("all");
+  const [showFilters, setShowFilters] = useState(false);
 
   const { isAuthenticated } = useSelector(
     (state: { auth: { isAuthenticated: boolean } }) => state.auth
@@ -42,6 +59,8 @@ export default function GalleryPage() {
   useEffect(() => {
     const fetchItems = async () => {
       try {
+        setLoading(true);
+        setError(null);
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/gallery`
         );
@@ -50,36 +69,62 @@ export default function GalleryPage() {
           `${process.env.NEXT_PUBLIC_BACKEND_URL}/event`
         );
         const parentEv = ev.data.filter((e: any) => e.parentEventId === "");
-        const list = parentEv.map((e: any) => ({ _id: e._id, title: e.title, date: e.date }));
+        const list = parentEv.map((e: any) => ({
+          _id: e._id,
+          title: e.title,
+          date: e.date,
+        }));
         setEvents(list);
         if (typeof window !== "undefined") {
           (window as any).__events = list;
         }
       } catch (e) {
-        console.error("Failed to load gallery", e);
+        setError("Failed to load gallery");
       } finally {
         setLoading(false);
       }
     };
     fetchItems();
   }, []);
+
   const filtered = useMemo(() => {
-    return filter === "all"
-      ? items
-          .slice()
-          .sort(
-            (a, b) =>
-              new Date(b.uploadedAt).getTime() -
-              new Date(a.uploadedAt).getTime()
-          )
-      : items
-          .filter((i) => i.mediaType === filter)
-          .sort(
-            (a, b) =>
-              new Date(b.uploadedAt).getTime() -
-              new Date(a.uploadedAt).getTime()
-          );
-  }, [items, filter]);
+    let result = items;
+
+    // Apply media type filter
+    if (filter !== "all") {
+      result = result.filter((i) => i.mediaType === filter);
+    }
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter((i) => i.title.toLowerCase().includes(query));
+    }
+
+    // Apply event filter
+    if (selectedEvent !== "all") {
+      result = result.filter((item) => {
+        const eventId = item.eventId as string | { $oid: string } | undefined;
+        let key = "";
+        if (!eventId) {
+          key = "no_event";
+        } else if (typeof eventId === "string") {
+          key = eventId;
+        } else if (typeof eventId === "object" && "$oid" in eventId) {
+          key = eventId.$oid;
+        } else {
+          key = String(eventId);
+        }
+        return key === selectedEvent;
+      });
+    }
+
+    // Sort by upload date
+    return result.sort(
+      (a, b) =>
+        new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime()
+    );
+  }, [items, filter, searchQuery, selectedEvent]);
 
   // Group filtered items by eventId
   const itemsByEvent: { [eventId: string]: GalleryItemData[] } = {};
@@ -99,9 +144,18 @@ export default function GalleryPage() {
     itemsByEvent[key].push(item);
   });
 
+  const clearFilters = () => {
+    setFilter("all");
+    setSearchQuery("");
+    setSelectedEvent("all");
+  };
+
+  const hasActiveFilters =
+    filter !== "all" || searchQuery || selectedEvent !== "all";
+
   return (
     <div className="mt-4 min-h-screen">
-      {/* Hero (matched with Events page) */}
+      {/* Hero Section */}
       <div className="relative rounded-2xl isolate w-full h-60 md:h-72 flex items-center justify-center overflow-hidden">
         <img
           src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/PrabhupadaInspectingBhagavatam.jpg?updatedAt=1754987127116"
@@ -117,101 +171,213 @@ export default function GalleryPage() {
             Gallery
           </h1>
           <p className="text-sm md:text-base text-white/90 mt-2 max-w-2xl mx-auto">
-            Photos and videos from our events. Filter by type or browse all.
+            Explore photos and videos from our events and activities
           </p>
         </div>
       </div>
 
-      {/* AppBar (filters) */}
-      <div className="sticky top-0 z-40 rounded-2xl mt-2 bg-white border-b border-gray-300 shadow-lg shadow-gray-400/10 backdrop-filter backdrop-brightness-125">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center gap-3">
-          <div className="flex items-center gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200 ml-auto">
-            {(["all", "image", "video"] as Filter[]).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={clsx(
-                  "px-3 py-1.5 rounded-lg text-sm font-semibold capitalize transition",
-                  filter === f
-                    ? "bg-white shadow border border-gray-200"
-                    : "text-gray-600 hover:bg-white"
+      {/* Enhanced AppBar with Search and Filters */}
+      <div className="sticky top-0 z-40 rounded-2xl mt-2 bg-white border-b border-gray-300 shadow-lg shadow-gray-400/10 ">
+        <div className="max-w-7xl mx-auto px-4 py-4 space-y-4">
+          <div className="flex flex-wrap items-center gap-3">
+            {/* Search Bar */}
+            <div className="flex-1 min-w-[200px]">
+              <div className="relative">
+                <IconSearch className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <TextInput
+                  placeholder="Search gallery items..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-3 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary2/30 text-sm"
+                />
+                {searchQuery && (
+                  <button
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <IconX className="h-5 w-5" />
+                  </button>
                 )}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
+              </div>
+            </div>
 
-          {isAuthenticated && (
-            <button
-              onClick={() => setOpenModal(true)}
-              className="inline-flex items-center justify-center rounded-xl bg-primary2 px-4 py-2 text-sm font-bold text-white shadow hover:bg-primary2/90 ml-auto"
-            >
-              Add to Gallery
-            </button>
-          )}
+            {/* Filters Row */}
+            <div className="flex items-center gap-3">
+              {/* Media Type Filters */}
+              <div className="flex items-center gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200">
+                {[
+                  { value: "all", icon: IconStack, label: "All" },
+                  { value: "image", icon: IconPhoto, label: "Images" },
+                  { value: "video", icon: IconVideo, label: "Videos" },
+                ].map(({ value, icon: Icon, label }) => (
+                  <button
+                    key={value}
+                    onClick={() => setFilter(value as Filter)}
+                    className={clsx(
+                      "px-3 py-1.5 rounded-lg text-sm font-semibold capitalize transition",
+                      filter === value
+                        ? "bg-white shadow border border-gray-200 text-primary2"
+                        : "text-gray-600 hover:bg-white"
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Event Filter */}
+              <Select
+                value={selectedEvent}
+                onChange={(e) => setSelectedEvent(e.target.value)}
+                className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm min-w-[150px]"
+              >
+                <option value="all">All Events</option>
+                {events.map((ev) => (
+                  <option key={ev._id} value={ev._id}>
+                    {ev.title}
+                  </option>
+                ))}
+                <option value="no_event">No Event</option>
+              </Select>
+
+              {/* Clear Filters */}
+              {hasActiveFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="px-3 py-2 rounded-lg text-sm font-semibold text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition"
+                >
+                  <IconX className="h-4 w-4" />
+                  Clear Filters
+                </button>
+              )}
+
+              {/* Add to Gallery Button */}
+              {isAuthenticated && (
+                <button
+                  onClick={() => setOpenModal(true)}
+                  className="inline-flex items-center justify-center rounded-xl bg-primary2 px-4 py-2 text-sm font-bold text-white shadow hover:bg-primary2/90 ml-auto"
+                >
+                  Add to Gallery
+                </button>
+              )}
+            </div>
+
+            {/* Results Count */}
+            {!loading && (
+              <div className="text-sm text-gray-600">
+                Showing {filtered.length} of {items.length} items
+                {hasActiveFilters && " (filtered)"}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
+      {/* Gallery Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
+        {/* Error */}
+        {error && (
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+            {error}
+          </div>
+        )}
+
         {loading ? (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
               <CardSkeleton key={i} />
             ))}
           </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="text-gray-400 text-6xl mb-4">📷</div>
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              No items found
+            </h3>
+            <p className="text-gray-500 mb-6">
+              {hasActiveFilters
+                ? "Try adjusting your filters or search query"
+                : "No gallery items available yet"}
+            </p>
+            {hasActiveFilters && (
+              <button
+                onClick={clearFilters}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-primary2 text-white rounded-lg hover:bg-primary2/90 transition"
+              >
+                <IconX className="h-4 w-4" />
+                Clear Filters
+              </button>
+            )}
+          </div>
         ) : (
           <>
+            {/* Grouped by Events */}
             {[...events]
               .sort(
                 (a, b) =>
                   new Date(b.date).getTime() - new Date(a.date).getTime()
               )
+              .filter(
+                (ev) => itemsByEvent[ev._id] && itemsByEvent[ev._id].length > 0
+              )
               .map((ev) => (
-                <section key={ev._id} className="mb-10">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-2 w-2 rounded-full bg-primary2" />
-                    <h2 className="text-xl font-bold text-fontApp">
-                      {ev.title}
-                    </h2>
-                    {ev.date ? (
-                      <Badge>
-                        {new Date(ev.date).toLocaleDateString(undefined, {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </Badge>
-                    ) : null}
+                <section key={ev._id} className="mb-12">
+                  <div className="flex items-center gap-3 mb-6 p-4 bg-white/60 rounded-2xl border border-gray-200">
+                    <div className="h-3 w-3 rounded-full bg-primary2" />
+                    <div className="flex-1">
+                      <h2 className="text-xl font-bold text-fontApp">
+                        {ev.title}
+                      </h2>
+                      {ev.date && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <IconCalendar className="h-4 w-4 text-gray-400" />
+                          <span className="text-sm text-gray-600">
+                            {new Date(ev.date).toLocaleDateString(undefined, {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </span>
+                          <Badge>
+                            {itemsByEvent[ev._id].length}{" "}
+                            {itemsByEvent[ev._id].length === 1
+                              ? "item"
+                              : "items"}
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
                   </div>
 
-                  {itemsByEvent[ev._id] && itemsByEvent[ev._id].length > 0 ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                      {itemsByEvent[ev._id].map((it, idx) => (
-                        <GallleryItem
-                          key={it._id}
-                          item={it}
-                          index={idx}
-                          onOpen={(i) => setActive(itemsByEvent[ev._id][i])}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="p-4 text-fontApp/70 rounded-xl border border-dashed border-primary2/30 bg-white/60">
-                      No items for this event.
-                    </div>
-                  )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    {itemsByEvent[ev._id].map((it, idx) => (
+                      <GallleryItem
+                        key={it._id}
+                        item={it}
+                        index={idx}
+                        onOpen={(i) => setActive(itemsByEvent[ev._id][i])}
+                      />
+                    ))}
+                  </div>
                 </section>
               ))}
 
+            {/* Other Items (No Event) */}
             {itemsByEvent["no_event"] &&
               itemsByEvent["no_event"].length > 0 && (
-                <section className="mb-10">
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="h-2 w-2 rounded-full bg-primary2" />
-                    <h2 className="text-xl font-bold text-fontApp">Other</h2>
+                <section className="mb-12">
+                  <div className="flex items-center gap-3 mb-6 p-4 bg-white/60 rounded-2xl border border-gray-200">
+                    <div className="h-3 w-3 rounded-full bg-primary2" />
+                    <h2 className="text-xl font-bold text-fontApp">
+                      Other Items
+                    </h2>
+                    <Badge>
+                      {itemsByEvent["no_event"].length}{" "}
+                      {itemsByEvent["no_event"].length === 1 ? "item" : "items"}
+                    </Badge>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     {itemsByEvent["no_event"].map((it, idx) => (
                       <GallleryItem
                         key={it._id}
@@ -227,29 +393,43 @@ export default function GalleryPage() {
         )}
       </div>
 
+      {/* Lightbox Modal */}
       {active && (
         <div
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={() => setActive(null)}
         >
           <div
-            className="relative w-full max-w-4xl"
+            className="relative w-full max-w-6xl"
             onClick={(e) => e.stopPropagation()}
           >
             {active.mediaType === "image" ? (
               <img
                 src={active.url}
                 alt={active.title}
-                className="w-full h-auto rounded-2xl shadow-2xl"
+                className="w-full h-auto max-h-[80vh] object-contain rounded-2xl shadow-2xl"
               />
             ) : (
               <VideoEmbed url={active.url} />
             )}
-            <div className="mt-3 flex items-center justify-between text-white">
-              <p className="font-medium">{active.title}</p>
+            <div className="mt-4 flex items-center justify-between text-white">
+              <div>
+                <p className="font-semibold text-lg">{active.title}</p>
+                {active.eventId && (
+                  <p className="text-white/70 text-sm mt-1">
+                    {
+                      events.find(
+                        (e) =>
+                          e._id === (active.eventId as any)?.$oid ||
+                          active.eventId
+                      )?.title
+                    }
+                  </p>
+                )}
+              </div>
               <div className="inline-flex gap-2">
                 <button
-                  className="px-3 py-1.5 rounded-lg bg-white/90 text-black hover:bg-white"
+                  className="px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm transition"
                   onClick={(e) => {
                     e.stopPropagation();
                     const currentIndex = filtered.findIndex(
@@ -258,10 +438,10 @@ export default function GalleryPage() {
                     if (currentIndex > 0) setActive(filtered[currentIndex - 1]);
                   }}
                 >
-                  Prev
+                  Previous
                 </button>
                 <button
-                  className="px-3 py-1.5 rounded-lg bg-white/90 text-black hover:bg-white"
+                  className="px-4 py-2 rounded-lg bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm transition"
                   onClick={(e) => {
                     e.stopPropagation();
                     const currentIndex = filtered.findIndex(
@@ -274,7 +454,7 @@ export default function GalleryPage() {
                   Next
                 </button>
                 <button
-                  className="px-3 py-1.5 rounded-lg bg-white/90 text-black hover:bg-white"
+                  className="px-4 py-2 rounded-lg bg-white text-black hover:bg-white/90 transition"
                   onClick={() => setActive(null)}
                 >
                   Close
@@ -295,6 +475,8 @@ export default function GalleryPage() {
     </div>
   );
 }
+
+// ... (Keep the existing GalleryUploadModal, VideoEmbed, and getYouTubeId functions exactly as they were)
 
 function getYouTubeId(url: string): string | null {
   const regex =

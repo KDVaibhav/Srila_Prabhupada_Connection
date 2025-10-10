@@ -31,6 +31,7 @@ const DataInsertModal = ({
     { _id: string; title: string }[]
   >([]);
   const [parentEventId, setParentEventId] = useState<string>("");
+  const [timeData, setTimeData] = useState<{ [key: string]: string }>({});
 
   const handleChange = (fieldName: string, value: string) => {
     setFormData((prevData) => ({
@@ -56,6 +57,7 @@ const DataInsertModal = ({
     };
     fetchParentEvents();
   }, []);
+
   const handleCheckboxChange = (
     fieldName: string,
     option: string,
@@ -88,11 +90,16 @@ const DataInsertModal = ({
     }
   };
 
-  // Add parentEventId to formData if present
+  // Improved time and date handling
+
   const handleSubmit = async () => {
     const token = localStorage.getItem("token");
     setLoading(true);
+    setError("");
 
+    let imageUrl = "";
+
+    // Handle file upload first if there's a selected file
     if (selectedFile) {
       try {
         const signedResponse = await axios.get(
@@ -105,40 +112,52 @@ const DataInsertModal = ({
         );
         const { signature, expire, token: imageKitToken } = signedResponse.data;
 
-        const formData = new FormData();
-        formData.append("file", selectedFile);
-        formData.append(
+        const uploadFormData = new FormData();
+        uploadFormData.append("file", selectedFile);
+
+        // FIX: Use formData state for title or fallback to current title
+        const titleField = formData["title"] || formData["name"] || title;
+        uploadFormData.append(
           "fileName",
-          `${title}-${formData.get(title)}-${Date.now()}`
+          `${title}-${titleField}-${Date.now()}`
         );
-        formData.append(
+        uploadFormData.append(
           "folder",
-          `/Prabhupada_Network/${title.toLocaleLowerCase()}s`
+          `/Prabhupada_Network/${title.toLowerCase()}s`
         );
-        formData.append("signature", signature);
-        formData.append("expire", expire);
-        formData.append("token", imageKitToken);
-        formData.append(
+        uploadFormData.append("signature", signature);
+        uploadFormData.append("expire", expire);
+        uploadFormData.append("token", imageKitToken);
+        uploadFormData.append(
           "publicKey",
           process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY!
         );
+
         const uploadResponse = await axios.post(
           `${process.env.NEXT_PUBLIC_IMAGEKIT_URL}`,
-          formData
+          uploadFormData
         );
-        const imageUrl = uploadResponse.data.url;
-        setFormData((prevData) => ({
-          ...prevData,
-          imageUrl: imageUrl,
-        }));
+        imageUrl = uploadResponse.data.url;
       } catch (error: any) {
-        setError(error.response.data.message);
+        setError(error.response?.data?.message || "Image upload failed");
         console.error("Image Upload Failed: ", error);
+        setLoading(false);
+        return;
       }
     }
+
     try {
       const submitData = { ...formData };
-      if (parentEventId) submitData.parentEventId = parentEventId;
+
+      // Add image URL if file was uploaded
+      if (imageUrl) {
+        submitData.imageUrl = imageUrl;
+      }
+
+      // Add parent event ID if present
+      if (parentEventId) {
+        submitData.parentEventId = parentEventId;
+      }
 
       await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/${title.toLowerCase()}`,
@@ -151,24 +170,38 @@ const DataInsertModal = ({
           },
         }
       );
+
       alert(`${title === "Join-Us" ? "You are" : title} added successfully`);
       onCloseModal();
+
+      // Reset form
+      setFormData({});
+      setSelectedFile(null);
+      setParentEventId("");
+      setTimeData({});
     } catch (error: any) {
-      setError(error.response.data.message);
+      setError(error.response?.data?.message || "Something went wrong");
       console.error("Error:", error);
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <Modal show={openModal} onClose={onCloseModal} size="md" popup>
       <Modal.Header />
       <Modal.Body>
-        <div className="">
-          <h3 className="text-xl font-medium text-fontApp pb-4">{title}</h3>
-          {error && <div className="text-red-800">{error}</div>}
+        <div className="space-y-4">
+          <h3 className="text-xl font-medium text-fontApp pb-2">{title}</h3>
+
+          {error && (
+            <div className="text-red-600 text-sm bg-red-50 p-2 rounded">
+              {error}
+            </div>
+          )}
+
           {title === "Event" && (
-            <div className="mb-2">
+            <div>
               <label className="block text-sm font-medium text-fontApp mb-1">
                 Event Type
               </label>
@@ -186,7 +219,7 @@ const DataInsertModal = ({
 
           {/* Show parent event dropdown if not creating a parent event */}
           {title === "Event" && formData["type"] === "child" && (
-            <div className="mb-2">
+            <div>
               <label className="block text-sm font-medium text-fontApp mb-1">
                 Select Parent Event
               </label>
@@ -203,13 +236,13 @@ const DataInsertModal = ({
               </Select>
             </div>
           )}
+
           {fields.map(
             (field: { name: string; type: string; options?: string[] }) => (
-              <div key={field.name} className="mb-2 block">
+              <div key={field.name} className="space-y-1">
                 {field.type === "string" && (
                   <TextInput
                     id={field.name}
-                    aria-label={`Enter ${field.name}`}
                     placeholder={`Enter ${field.name}`}
                     value={formData[field.name] || ""}
                     onChange={(event) =>
@@ -220,18 +253,24 @@ const DataInsertModal = ({
                 )}
 
                 {field.type === "img" && (
-                  <FileInput
-                    id={field.name}
-                    accept="image/*"
-                    onChange={handleFileChange}
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-fontApp mb-1">
+                      {field.name}
+                    </label>
+                    <FileInput
+                      id={field.name}
+                      accept="image/*"
+                      onChange={handleFileChange}
+                    />
+                  </div>
                 )}
+
                 {field.type === "checkbox" && field.options && (
                   <div className="space-y-2">
                     <div className="block text-sm font-medium text-fontApp">
                       {field.name}
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       {field.options.map((option) => (
                         <div key={option} className="flex items-center">
                           <Checkbox
@@ -263,31 +302,82 @@ const DataInsertModal = ({
                 )}
 
                 {field.type === "date" && (
-                  <Datepicker
-                    id={field.name}
-                    aria-label={`Enter ${field.name}`}
-                    placeholder={`Enter ${field.name}`}
-                    value={
-                      typeof formData[field.name] === "string" &&
-                      formData[field.name]
-                        ? new Date(formData[field.name] as string)
-                        : new Date("1966-01-01")
-                    }
-                    onChange={(date) =>
-                      handleChange(field.name, date ? date.toISOString() : "")
-                    }
-                    className="absolute"
-                    required
-                  />
+                  <div>
+                    <label className="block text-sm font-medium text-fontApp mb-1">
+                      {field.name}
+                    </label>
+                    <div className="flex gap-2 items-center">
+                      <Datepicker
+                        id={field.name}
+                        placeholder={`Select ${field.name}`}
+                        value={
+                          formData[field.name]
+                            ? new Date(formData[field.name] as string)
+                            : undefined
+                        }
+                        onChange={(date: Date | null) => {
+                          if (date) {
+                            const currentTime = timeData[field.name] || "00:00";
+                            const [hours, minutes] = currentTime.split(":");
+                            date.setHours(parseInt(hours), parseInt(minutes));
+                            handleChange(field.name, date.toISOString());
+                          } else {
+                            handleChange(field.name, "");
+                          }
+                        }}
+                        className="flex-1"
+                        required
+                      />
+                      <input
+                        type="time"
+                        id={`${field.name}-time`}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 w-28"
+                        value={
+                          formData[field.name]
+                            ? new Date(
+                                formData[field.name] as string
+                              ).toLocaleTimeString("en-IN", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: false,
+                              })
+                            : timeData[field.name] || "00:00"
+                        }
+                        onChange={(e) => {
+                          const time = e.target.value;
+                          setTimeData((prev) => ({
+                            ...prev,
+                            [field.name]: time,
+                          }));
+
+                          if (formData[field.name]) {
+                            const date = new Date(
+                              formData[field.name] as string
+                            );
+                            const [hours, minutes] = time.split(":");
+                            date.setHours(parseInt(hours), parseInt(minutes));
+                            handleChange(field.name, date.toISOString());
+                          } else {
+                            // If no date selected yet, use today's date with the time
+                            const today = new Date();
+                            const [hours, minutes] = time.split(":");
+                            today.setHours(parseInt(hours), parseInt(minutes));
+                            handleChange(field.name, today.toISOString());
+                          }
+                        }}
+                        required
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
             )
           )}
 
-          <div className="flex justify-end w-full">
+          <div className="flex justify-end pt-4">
             <Button
               onClick={handleSubmit}
-              className="bg-primary2 hover:text-fontApp"
+              className="bg-primary2 hover:bg-primary2/90 text-white"
               disabled={loading}
             >
               {loading ? `Adding ${title}` : `Add ${title}`}
