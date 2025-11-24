@@ -8,8 +8,11 @@ async function bootstrap() {
   // const frontendUrl = process.env.FRONTEND_URL;
 
   // app.enableCors({ origin: frontendUrl, credentials: true });
+  const PORT = 5000;
 
-  await app.listen(5000, '0.0.0.0');
+  await app.listen(PORT, '0.0.0.0');
+  console.log(`Server is running and listening on port ${PORT} (0.0.0.0)`);
+  console.log();
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
