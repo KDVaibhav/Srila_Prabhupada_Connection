@@ -10,3 +10,5 @@ export const TFAC_Course = [
   "Devotees attending this course will gain an in-depth understanding of Srila Prabhupada’s role in our movement based on sastric references and our Gaudiya Vaisnava history.",
   "The modality facilitators will utilize will substantially deepen students’ relationship with Srila  Prabhupada by focusing on heartfelt group discussions and presentations that ISKCON educators have effectively used for years in devotional courses for enabling students to develop heartfelt vijnana for even the most difficult to understand aspects of bhakti.     ",
 ];
+
+// fixed
