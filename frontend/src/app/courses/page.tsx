@@ -1,58 +1,112 @@
 import React from "react";
-import Link from "next/link";
+import { SPIC_Course, TFAC_Course } from "../../../public/data";
+import { TestimonialVideos } from "./testimonialVideos";
 
-export default function Page() {
+const Page = () => {
   return (
-    <main className="min-h-[80vh] w-full grid place-items-center bg-bgApp px-4 py-16">
-      <section className="relative isolate w-full max-w-3xl overflow-hidden rounded-2xl border border-white/40 bg-white/60 shadow-sm backdrop-blur">
-        {/* Decorative gradient blob */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-primary2/30 blur-3xl"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-primary1/30 blur-3xl"
-        />
+    <div>
+      {/* SPIC Section */}
+      <div>
+        <div className="relative">
+          {/* 1st Section */}
+          <div className="relative ">
+            <div className="flex min-h-[450px]">
+              {/* right side */}
+              <div className="w-full md:w-1/2 bg-[#17727F] flex items-center justify-center ">
+                <div className="flex flex-col border border-white p-6 rounded-3xl text-white text-lg lg:text-4xl w-2/3 font-urbanist items-center font-semibold text-center">
+                  <span>SRILA PRABHUPADA</span>
+                  <span>INTRODUCTORY</span>
+                  <span>COURSE</span>
+                  <img
+                    src="/lotus.png"
+                    alt="lotus"
+                    className="w-16 mt-4 lg:w-24"
+                  />
+                </div>
+              </div>
 
-        <div className="relative z-10 p-10 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary2/10 px-3 py-1 text-xs font-semibold text-primary2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="h-4 w-4"
-            >
-              <path d="M12 2a7 7 0 00-7 7v3.586l-1.707 1.707A1 1 0 004 16h16a1 1 0 00.707-1.707L19 12.586V9a7 7 0 00-7-7zm0 20a3 3 0 003-3H9a3 3 0 003 3z" />
-            </svg>
-            Coming Soon
-          </span>
+              {/* left side */}
+              <img
+                src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/Courses/SPIC_SP.svg?updatedAt=1762239170857"
+                className="w-1/2 hidden md:block object-cover"
+                alt="SPIC Illustration"
+              />
+            </div>
+          </div>
 
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-fontApp sm:text-4xl">
-            Courses
-          </h1>
-          <p className="mx-auto mt-3 max-w-prose text-sm leading-relaxed text-fontApp2/90">
-            We’re crafting structured learning around Srila Prabhupada’s teachings—
-            bite‑sized lessons, quizzes, and guided study plans. Please check back
-            soon.
-          </p>
-
-          <div className="mt-8 flex items-center justify-center gap-3">
-            <Link
-              href="/"
-              className="inline-flex items-center justify-center rounded-xl border border-primary2/30 bg-primary2/90 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary2 focus:outline-none focus:ring-2 focus:ring-primary2/50"
-            >
-              Back to Home
-            </Link>
-            <Link
-              href="/events"
-              className="inline-flex items-center justify-center rounded-xl border border-fontApp/20 bg-white/70 px-4 py-2 text-sm font-semibold text-fontApp shadow hover:bg-white focus:outline-none focus:ring-2 focus:ring-primary1/40"
-            >
-              See Events
-            </Link>
+          {/* Course Intro Section - Overlay */}
+          <div className="absolute md:-bottom-60 -bottom-[210px] lg:-bottom-72 xl:-bottom-20 2xl:-bottom-10 3xl:-bottom-0 left-1/2 transform -translate-x-1/2 w-11/12">
+            <div className="bg-white shadow-lg rounded-3xl p-6 md:p-10 text-[#17727F]">
+              <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-center">
+                {SPIC_Course.map((text, idx) => (
+                  <div
+                    key={idx}
+                    className="text-xs md:text-sm lg:text-lg text-center"
+                  >
+                    {text}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
-      </section>
-    </main>
+        <div className="h-[210px] md:h-60 lg:h-72 xl:h-20 2xl:h-10 3xl:h-0" />
+
+        <TestimonialVideos />
+      </div>
+
+      {/* TFAC */}
+      <div>
+        <div className="relative">
+          {/* 1st Section */}
+          <div className="relative ">
+            <div className="flex min-h-[450px]">
+              {/* right side */}
+              <img
+                src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/Courses/TFAC"
+                className="w-1/2 hidden md:block object-cover"
+                alt="SPIC Illustration"
+              />
+
+              {/* left side */}
+              <div className="w-full md:w-1/2 bg-[#17727F] flex items-center justify-center ">
+                <div className="flex flex-col border border-white p-6 rounded-3xl text-white text-lg lg:text-4xl w-2/3 font-urbanist items-center font-semibold text-center">
+                  <span>THE FOUNDED ACHARYA</span>
+                  <span>COURSE</span>
+                  <img
+                    src="/lotus.png"
+                    alt="lotus"
+                    className="w-16 mt-4 lg:w-24"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Course Intro Section - Overlay */}
+          <div className="absolute md:-bottom-60 -bottom-[210px] lg:-bottom-72 xl:-bottom-20 2xl:-bottom-10 3xl:-bottom-0 left-1/2 transform -translate-x-1/2 w-11/12">
+            <div className="bg-white shadow-lg rounded-3xl p-6 md:p-10 text-[#17727F]">
+              <div className="flex flex-col md:flex-row gap-6 md:gap-4 items-center">
+                {TFAC_Course.map((text, idx) => (
+                  <div
+                    key={idx}
+                    className="text-xs md:text-sm lg:text-lg text-center"
+                  >
+                    {text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="h-[210px] md:h-60 lg:h-72 xl:h-20 2xl:h-10 3xl:h-0" />
+      </div>
+    </div>
   );
+};
+
+export default Page;
+
+{
+  /* TFAC Section */
 }
