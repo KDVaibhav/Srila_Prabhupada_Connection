@@ -10,7 +10,13 @@ import Link from "next/link";
 
 export const BlogSection = () => {
   const [blogs, setBlogs] = useState<
-    { title: string; date: string; imageUrl: string; description: string, content: string }[]
+    {
+      title: string;
+      date: string;
+      imageUrl: string;
+      description: string;
+      content: string;
+    }[]
   >([]);
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useSelector(
@@ -32,11 +38,20 @@ export const BlogSection = () => {
         console.log("Error fetching the blogs", error);
       }
     };
-    fetchBlogs(); 
+    fetchBlogs();
   }, []);
   return (
-    <div className="w-full h-full py-2 bg-bgApp2 rounded-2xl">
-      <h2 className="max-w-7xl pl-4 py-2 mx-auto text-2xl font-bold text-fontApp font-sans">
+    <div
+      className="w-full h-full py-2 bg-bgApp2 rounded-2xl"
+      style={{
+        backgroundImage:
+          'url("https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/BG.jpg")',
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+      }}
+    >
+      <h2 className="max-w-7xl pl-4 py-2 shad text-center mx-auto text-2xl font-semibold text-fontApp font-sans">
         Blogs
       </h2>
       <div className="flex flex-col items-center">
