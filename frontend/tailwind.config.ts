@@ -15,7 +15,7 @@ export default {
   			primary2: '#EA7C0B',
   			secondary1: '#59B2B2',
   			secondary2: '#FFA082',
-  			fontApp: '#034242',
+  			fontApp: '#17727F',
   			fontApp2: '#8C2808',
   			bgApp: '#F2FFFF',
   			bgApp2: '#FFECE5',
