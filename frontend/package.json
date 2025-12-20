@@ -42,7 +42,7 @@
     "imagekitio-react": "^4.2.0",
     "lucide-react": "^0.475.0",
     "motion": "^12.23.12",
-    "next": "15.1.6",
+    "next": "15.1.11",
     "next-themes": "^0.4.6",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
