@@ -10,7 +10,7 @@ import { QueryFields } from "@/app/data";
 import axios from "axios";
 import { subscribe } from "diagnostics_channel";
 
-const Underline = `hover:-translate-y-1 border rounded-xl p-1.5 transition-transform`;
+const Underline = `hover:-translate-y-1 border rounded-2xl p-1 transition-transform`;
 
 function handleScrollTop() {
   window.scroll({
@@ -100,7 +100,7 @@ const ContactUsSection = () => {
               target="_blank"
               className={Underline}
             >
-              <DIcons.Instagram strokeWidth={1.5} className="h-5 w-5" />
+              <DIcons.Instagram strokeWidth={1.5} className="h-6 w-6" />
             </Link>
             {/* <Link
               aria-label="Logo"
@@ -109,7 +109,7 @@ const ContactUsSection = () => {
               target="_blank"
               className={Underline}
               >
-              <DIcons.X className="h-5 w-5" />
+              <DIcons.X className="h-6 w-6" />
               </Link> */}
             <Link
               aria-label="Logo"
@@ -118,7 +118,7 @@ const ContactUsSection = () => {
               target="_blank"
               className={Underline}
             >
-              <DIcons.WhatsApp className="h-5 w-5" />
+              <DIcons.WhatsApp className="h-6 w-6" />
             </Link>
             <Link
               aria-label="Logo"
@@ -127,7 +127,7 @@ const ContactUsSection = () => {
               target="_blank"
               className={Underline}
             >
-              <DIcons.Facebook className="h-5 w-5" />
+              <DIcons.Facebook className="h-6 w-6" />
             </Link>
             <Link
               aria-label="Logo"
@@ -136,21 +136,25 @@ const ContactUsSection = () => {
               target="_blank"
               className={Underline}
             >
-              <DIcons.YouTube className="h-5 w-5" />
+              <DIcons.YouTube className="h-6 w-6" />
             </Link>
           </div>
-          <div className="flex items-center justify-between w-1/2 border rounded-2xl border-white">
+          <div className="flex items-center justify-between w-1/2 border rounded-2xl ml-1 border-white overflow-hidden">
             <input
               id={email}
-              aria-label={`Enter email`}
-              placeholder={`Enter email`}
+              aria-label="Enter email"
+              placeholder="Enter email"
               value={email || ""}
               onChange={(event) => setEmail(event.target.value)}
-              className="bg-fontApp rounded-2xl w-2/3 pl-1 py-1 focus:outline-none"
+              className="bg-fontApp rounded-2xl w-full pl-2 py-1 text-xs md:text-sm focus:outline-none text-white placeholder:text-white
+               [&:-webkit-autofill]:bg-fontApp
+               [&:-webkit-autofill]:-webkit-text-fill-color-white
+               [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_theme(colors.fontApp)]
+               [&:-webkit-autofill]:border-none"
             />
             <button
               onClick={handleSubscribe}
-              className="bg-[#F4FCFC] text-fontApp rounded-2xl px-2 py-1 hover:bg-[#cddbdb]"
+              className="bg-[#F4FCFC] text-fontApp rounded-2xl px-2 py-1 hover:bg-[#cddbdb] ml-[-8px]"
             >
               <DIcons.Bell />
             </button>
