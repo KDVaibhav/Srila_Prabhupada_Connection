@@ -456,7 +456,7 @@ export default function EventsPage() {
 
   // UI state
   const [tab, setTab] = useState<"upcoming" | "past" | "all">("all");
-  const [view, setView] = useState<"grid" | "timeline">("grid");
+  const [view, setView] = useState<"grid" | "timeline">("timeline");
   const [query, setQuery] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [location, setLocation] = useState<string>("");
