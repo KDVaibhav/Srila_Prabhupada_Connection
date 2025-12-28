@@ -72,9 +72,9 @@ const QuotesSection = () => {
     <div>
       <div className="relative bg-white">
         <img
-          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCMHeroImage.jpg"
+          src="https://ik.imagekit.io/opiwak7mf/Prabhupada_Network/SPCMHero&Quotes.jpg"
           alt="SP_HERO_IMAGE"
-          className="bg-cover rounded-t-xl"
+          className="object-cover w-full h-full rounded-t-xl"
         />
         <div className="absolute -bottom-24 sm:-bottom-28 md:-bottom-36 lg:-bottom-20 left-1/2 transform -translate-x-1/2 w-5/6 md:w-11/12 max-w-[800px]">
           {/* Quote Card */}
